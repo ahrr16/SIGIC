@@ -15,7 +15,7 @@ def modulos_infos():
 
 # Definição da função com os caminhos entre os módulos
 def conexao_rede():
-     return[
+        return[
         [0, 20, 70, 60, 80, 60, 15, 25],
         [20, 0, 40, 0, 0, 70, 0, 0],
         [70, 40, 0, 45, 95, 110, 100, 110],
@@ -25,3 +25,20 @@ def conexao_rede():
         [15, 0, 100, 0, 0, 0, 0, 25],
         [25, 60, 110, 88, 100, 30, 25, 0]]
 
+# Relação legível entre os nomes dos módulos e a matriz de conexões
+def relacoes_modulos_conexoes():
+    nomes = modulos()
+    matriz = conexao_rede()
+    return {nome: linha for nome, linha in zip(nomes, matriz)}
+
+# Lista as conexões diretas entre módulos com peso
+def conexoes_com_nomes():
+    nomes = modulos()
+    matriz = conexao_rede()
+    conexoes = []
+    for i in range(len(nomes)):
+        for j in range(i + 1, len(nomes)):
+            peso = matriz[i][j]
+            if peso != 0:
+                conexoes.append((nomes[i], nomes[j], peso))
+    return conexoes
