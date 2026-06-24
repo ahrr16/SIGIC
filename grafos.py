@@ -1,113 +1,80 @@
 from collections import deque
-from dados import conexao_rede
+import heapq
+from dados import *
 
-def bfs(matriz, V, inicio):
+# Definição da função para visualizar a rede de módulos
+def visualizar_rede():
+    print("\n===== REDE DA COLÔNIA =====")
+    for origem, conexoes in grafo().items():
+        print(f"\n{origem}:")
+        for destino, peso in conexoes:
+            print(f"  -> {destino} | peso: {peso}")
+
+# Definição da função para buscar módulos usando BFS (Busca em Largura)
+def bfs(inicio):
     
-    visitado = [False] * V      # Marca quais vértices já foram visitados
-    queue = deque()            # Fila para BFS
-    ordem = []                 # Armazena a ordem de visita
+    visitados = [] 
+    fila = [inicio]
 
-    visitado[inicio] = True
-    queue.append(inicio)
+    while fila:
+        atual = fila.pop(0)
 
-    while queue:
-        u = queue.popleft()    # Remove o primeiro da fila
-        ordem.append(u)        # Adiciona à ordem de visita
+        if atual not in visitados:
+            visitados.append(atual)
 
-        # Percorre todos os vértices adjacentes
-        for v in range(V):
-            if matriz[u][v] != 0 and not visitado[v]:
-                visitado[v] = True
-                queue.append(v)
-    
-    return ordem
+            for vizinho, peso in grafo()[atual]:
+                if vizinho not in visitados:
+                    fila.append(vizinho)
 
-# Python
-# parent: lista representando o pai de cada nó no caminho
-# s: nó de origem
-# t: nó de destino
-def print_path(matriz, inicio, fim):
-    path = []
-    current = fim
+    return visitados
 
-    # Percorre os pais de t até s
-    while current != -1:
-        path.append(current)
-        if current == inicio:
-            break
-        current = fim[current]
+# Definição da função para buscar módulos usando DFS (Busca em Profundidade)
+def dfs(inicio, visitados=None):
+    if visitados is None:
+        visitados = []
 
-    # Verifica se s realmente conecta t
-    if path[-1] != inicio:
-        print("Não há caminho de", inicio, "para", fim)
-        return
+    visitados.append(inicio)
 
-    # Inverte e imprime o caminho
-    path.reverse()
-    print("Caminho de", inicio, "para", fim, ":", ' -> '.join(map(str, path)))
+    for vizinho, peso in grafo()[inicio]:
+        if vizinho not in visitados:
+            dfs(vizinho, visitados)
+
+    return visitados
 
 
 INF = 1_000_000_000
+# Definição da função para buscar o caminho mais curto entre dois módulos usando o algoritmo de Dijkstra
+def dijkstra(origem, destino):
+    # Inicializa distâncias com infinito e rastreia o módulo anterior no caminho
+    distancias = {modulo: INF for modulo in grafo()}
+    anteriores = {modulo: None for modulo in grafo()}
 
-# Retorna o índice do vértice não finalizado com menor distância
-def min_dist(dist, used, V):
-    best = INF
-    idx = -1
-    for i in range(V):
-        if not used[i] and dist[i] < best:
-            best = dist[i]
-            idx = i
-    return idx
+    distancias[origem] = 0
+    fila = [(0, origem)]  # Fila de prioridade com (distância, módulo)
 
-# w[u][v] = peso; 0 significa "sem aresta"
-def dijkstra(matriz, V, inicio):
-    dist = [INF] * V
-    parent = [-1] * V
-    used = [False] * V
+    # Processa módulos em ordem de distância (processando os mais próximos primeiro)
+    while fila:
+        distancia_atual, atual = heapq.heappop(fila)
 
-    dist[inicio] = 0
-
-    for _ in range(V):
-        u = min_dist(dist, used, V)
-        if u == -1:
-            break  # não há mais alcançáveis
-
-        used[u] = True
-
-        # Relaxamento das arestas saindo de u
-        for v in range(V):
-            if matriz[u][v] > 0 and not used[v]:
-                if dist[u] + matriz[u][v] < dist[v]:
-                    dist[v] = dist[u] + matriz[u][v]
-                    parent[v] = u
-
-    return dist, parent
-
-def print_path_parent(parent, inicio, fim):
-    stack = []
-    v = fim
-
-    # Monta o caminho de t até s
-    while v != -1:
-        stack.append(v)
-        if v == inicio:
+        if atual == destino:
             break
-        v = parent[v]
 
-    # Verifica se existe caminho
-    if len(stack) == 0 or stack[-1] != inicio:
-        print(f"Sem caminho de {inicio} para {fim}.")
-        return
+        # Relaxamento das arestas: atualiza distâncias se encontrar caminho melhor
+        for vizinho, peso in grafo()[atual]:
+            nova_distancia = distancia_atual + peso
 
-    # Imprime o caminho na ordem correta
-    for i in range(len(stack) - 1, -1, -1):
-        if i > 0:
-            print(stack[i], end=" -> ")
-        else:
-            print(stack[i])
+            if nova_distancia < distancias[vizinho]:
+                distancias[vizinho] = nova_distancia
+                anteriores[vizinho] = atual
+                heapq.heappush(fila, (nova_distancia, vizinho))
 
-dist, parent = dijkstra(conexao_rede(),7,0)
-print(parent)
+    # Reconstrói o caminho do destino até a origem
+    caminho = []
+    atual = destino
 
-print(print_path_parent(parent,0,7))
+    while atual is not None:
+        caminho.insert(0, atual)
+        atual = anteriores[atual]
+
+    return caminho, distancias[destino]
 

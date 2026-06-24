@@ -32,13 +32,13 @@ def relacoes_modulos_conexoes():
     return {nome: linha for nome, linha in zip(nomes, matriz)}
 
 # Lista as conexões diretas entre módulos com peso
-def conexoes_com_nomes():
-    nomes = modulos()
-    matriz = conexao_rede()
-    conexoes = []
-    for i in range(len(nomes)):
-        for j in range(i + 1, len(nomes)):
-            peso = matriz[i][j]
-            if peso != 0:
-                conexoes.append((nomes[i], nomes[j], peso))
-    return conexoes
+def grafo():
+    grafo = {'Habitação': [('Centro de controle', 20), ('Armazenamento de energia', 70), ('Agricultura', 60), ('Laboratório científico', 80), ('Comunicação', 60), ('Suporte médico', 15), ('Produção de oxigênio', 25)],
+         'Centro de controle': [('Habitação', 20), ('Armazenamento de energia', 40), ('Comunicação', 70)],
+         'Armazenamento de energia': [('Habitação', 70), ('Centro de controle', 40), ('Agricultura', 45), ('Laboratório científico', 95), ('Comunicação', 110), ('Suporte médico', 100), ('Produção de oxigênio', 110)],
+         'Agricultura': [('Habitação', 60), ('Armazenamento de energia', 45), ('Produção de oxigênio', 88)],
+         'Laboratório científico': [('Habitação', 80), ('Armazenamento de energia', 95), ('Produção de oxigênio', 100)],
+         'Comunicação': [('Habitação', 60), ('Centro de controle', 70), ('Armazenamento de energia', 110), ('Produção de oxigênio', 30)],
+         'Suporte médico': [('Habitação', 15), ('Armazenamento de energia', 100), ('Produção de oxigênio', 25)],
+         'Produção de oxigênio': [('Habitação', 25), ('Armazenamento de energia', 110), ('Agricultura', 88), ('Laboratório científico', 100), ('Comunicação', 30), ('Suporte médico', 25)]}
+    return grafo
