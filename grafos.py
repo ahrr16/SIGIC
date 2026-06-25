@@ -77,4 +77,3 @@ def dijkstra(origem, destino):
         atual = anteriores[atual]
 
     return caminho, distancias[destino]
-

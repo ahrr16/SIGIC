@@ -6,11 +6,11 @@ def modulos():
 
 # Definição da função que contêm as informações referentes aos módulos 
 def modulos_infos():
-   infos = ((30, 10, 5, 60, 25, 8, 15, 40), # Consumo em kW de potência contínua
+   infos = [(30, 10, 5, 60, 25, 8, 15, 40), # Consumo em kW de potência contínua
             (1, 1, 0.75, 0.5, 0.5, 0.75, 1, 1), # Ordem de preioridade dos módulos, sendo 1 o mais crítico
             (5560,200,2000,3300,500,100,200,200), # Armazenamento total dos módulos, podendo ser medidos em kg, tb, kWh 
             (1,1,1,1,1,1,1,1), # Necessidade de comunicação entre os módulos
-            (1,1,1,1,1,1,1,1)) # Status operacional do módulo
+            (1,1,1,1,1,1,1,1)] # Status operacional do módulo
    return infos
 
 # Definição da função com os caminhos entre os módulos
