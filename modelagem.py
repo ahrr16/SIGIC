@@ -1,8 +1,9 @@
+'''Algoritmos de modelagem matemática para o consumo de energia da colônia'''
 from dados import *
 from grafos import *
 
 
-
+# Função para calcular a perda energética entre dois módulos usando o algoritmo de Dijkstra
 def perda_energetica(origem, destino):
     caminho, distancia = dijkstra(origem, destino)
     if caminho is not None:
@@ -11,6 +12,7 @@ def perda_energetica(origem, destino):
     else:
         return None
     
+# Função para calcular o consumo total de energia da colônia    
 def consumo_total():
     
     total = 0
@@ -22,26 +24,21 @@ def consumo_total():
                 total += consumo[i]
     return total
 
-def crescimento_consumo(taxa, tempo):
-    return consumo_total() * taxa * tempo # Supondo um crescimento de 5% no consumo total de energia da colônia por unidade de tempo
+# Função para calcular o crescimento do consumo de energia da colônia ao longo do tempo
+def aumento_consumo(taxa, tempo):
+    return consumo_total() * taxa * tempo # Calcula o aumento do consumo de energia com base na taxa e no tempo fornecidos
 
-def simulacao_modelagem(taxa, tempo):
-    
-
-
-    # Calcula projeção de consumo para os próximos períodos
+def modelagem(taxa, tempo):
+    # Calcula o consumo inicial e o consumo futuro estimado com base na taxa de crescimento e no tempo fornecidos
     consumo = consumo_total()
-    taxa = 8  # Unidades de energia por período
-    tempo = 5  # Períodos futuros
-
-    resultado = crescimento_consumo(taxa, tempo)
+    resultado = aumento_consumo(taxa, tempo)
 
     print(f"\nConsumo inicial: {consumo} kW")
     print(f"Taxa de crescimento: {taxa}")
     print(f"Tempo analisado: {tempo}")
     print(f"Consumo futuro estimado: {resultado}")
 
-    # Avisa se a projeção exceder capacidade de geração
+    # Verifica se o consumo futuro excede o limite de 220 kW e retorna uma mensagem de alerta
     if resultado > 220:
         print("ALERTA: será necessário otimizar o uso de energia.")
     else:

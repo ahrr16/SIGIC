@@ -15,8 +15,10 @@ def modulos_infos():
 
 # Definição da função com os caminhos entre os módulos
 def conexao_rede():
+        # Matriz de conexões entre os módulos, onde cada elemento representa o peso  entre os módulos
+        # 0 indica que não há conexão direta entre os módulos
         return[
-        [0, 20, 70, 60, 80, 60, 15, 25],
+        [0, 20, 70, 60, 80, 60, 15, 25], 
         [20, 0, 40, 0, 0, 70, 0, 0],
         [70, 40, 0, 45, 95, 110, 100, 110],
         [60, 0, 45, 0, 0, 0, 0, 88],
